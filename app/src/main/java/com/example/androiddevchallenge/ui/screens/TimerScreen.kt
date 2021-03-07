@@ -1,6 +1,7 @@
 package com.example.androiddevchallenge.ui.screens
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ var timer: CountDownTimer? = null
 @Composable
 fun TimerTV(){
     val millisLeft = TimerState.millisLeft.value.toLong()
+    Log.e(">>>>>>>>>>>>>>>>>>>>>>>>","$millisLeft")
     val secondsInMilli: Long = 1000
 
     val seconds = millisLeft/secondsInMilli
@@ -60,7 +62,6 @@ fun TimerUI() {
             override fun onTick(millisUntilFinished: Long) {
                 TimerState.millisLeft.value = millisUntilFinished.toFloat()
             }
-
             override fun onFinish() {
                 TimerState.millisLeft.value = 0.1f
                 TimerState.started.value = false

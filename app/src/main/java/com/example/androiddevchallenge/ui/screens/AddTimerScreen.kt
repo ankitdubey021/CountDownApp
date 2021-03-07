@@ -1,14 +1,18 @@
 package com.example.androiddevchallenge.ui.screens
-
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Backspace
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 
@@ -20,7 +24,7 @@ object AddTimerNumberState {
 }
 
 @Composable
-fun AddTimerScreen() {
+fun AddTimerScreen(bottomSheetCloseCallback : () -> Unit) {
 
     val m1 = AddTimerNumberState.m1.value
     val m2 = AddTimerNumberState.m2.value
@@ -125,12 +129,54 @@ fun AddTimerScreen() {
                 .height(50.dp)
         ) {
 
+            Box(
+                modifier = Modifier
+                    .width(50.dp)
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.Center,
+            ) {
+
+            }
+
             NumberBox(text = 0, callBack = {
                 addNumber(it)
             })
+
+            Box(
+                modifier = Modifier
+                    .width(50.dp)
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.Center,
+            ) {
+
+                IconButton(onClick = {
+                    setTime(bottomSheetCloseCallback)
+                }) {
+                    Icon(
+                        Icons.Filled.Check, "play",
+                    )
+                }
+            }
         }
         Spacer(Modifier.height(50.dp))
     }
+}
+
+
+fun setTime(bottomSheetCloseCallback : () -> Unit) {
+
+    val minStr= "${AddTimerNumberState.h1.value?:0}${AddTimerNumberState.h2.value?:0}"
+    val secStr = "${AddTimerNumberState.m1.value?:0}${AddTimerNumberState.m2.value?:0}"
+    val minutes = minStr.toInt()
+    val seconds = secStr.toInt()
+
+    var totalMillis = seconds * 1000L
+    totalMillis += minutes * 60 * 1000
+
+    TimerState.millisLeft.value = totalMillis.toFloat()
+    TimerState.totalTime = totalMillis
+    timer = null
+    bottomSheetCloseCallback()
 }
 
 fun deleteNumbers() {

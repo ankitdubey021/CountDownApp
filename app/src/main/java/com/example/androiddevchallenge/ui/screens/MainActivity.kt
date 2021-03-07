@@ -98,7 +98,11 @@ fun MyApp() {
                 )
             },
             sheetContent = {
-                AddTimerScreen()
+                AddTimerScreen(bottomSheetCloseCallback = {
+                    coroutineScope.launch {
+                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                    }
+                })
             },
             content={
                 Box (
@@ -129,7 +133,7 @@ object ThemeState {
 }
 
 object TimerState{
-    val totalTime = 60000L
+    var totalTime = 60000L
     var started : MutableState<Boolean> = mutableStateOf(false)
     var millisLeft : MutableState<Float> = mutableStateOf(totalTime.toFloat())
 }
